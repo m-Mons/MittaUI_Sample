@@ -1,0 +1,6 @@
+[submodule "LocalPackages/MittaUI"]
+	path = LocalPackages/MittaUI
+	url = git@github.com:m-Mons/MittaUI.git
+[submodule "LocalPackages/MittaUI.Service"]
+	path = LocalPackages/MittaUI.Service
+	url = git@github.com:m-Mons/MittaUI_Service.git
