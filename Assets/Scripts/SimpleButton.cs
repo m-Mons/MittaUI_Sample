@@ -2,6 +2,8 @@ using MittaUI.Runtime.Constant;
 using MittaUI.Runtime.Parts;
 using NaughtyAttributes;
 using UnityEngine;
+using LitMotion;
+using LitMotion.Extensions;
 
 namespace MittaUI.Runtime
 {
@@ -20,9 +22,8 @@ namespace MittaUI.Runtime
         [SerializeField] [Header("完全に押下するまでの時間")] [ShowIf(nameof(_doAnimation))]
         private float _buttonAnimationPressDuration = 0.25f;
 
-        // TODO : アニメーション実装
-        // [SerializeField] [Header("押下時のイージング")] [ShowIf(nameof(_doAnimation))]
-        // private Ease _buttonAnimationPressEase = Ease.OutCubic;
+        [SerializeField] [Header("押下時のイージング")] [ShowIf(nameof(_doAnimation))]
+        private Ease _buttonAnimationPressEase = Ease.OutSine;
 
         [SerializeField] [Header("元の大きさに戻るまでの時間")] [ShowIf(nameof(_doAnimation))]
         private float _buttonAnimationPullDuration = 0.25f;
@@ -30,9 +31,9 @@ namespace MittaUI.Runtime
         [SerializeField] [Header("デフォルトのスケール")] [ShowIf(nameof(_doAnimation))]
         private float _buttonAnimationDefaultScale = 1f;
 
-        // TODO : アニメーション実装
-        // [SerializeField] [Header("元の大きさの戻る時のイージング")] [ShowIf(nameof(_doAnimation))]
-        // private Ease _buttonAnimationPullEase = Ease.OutBounce;
+        //TODO  大きさを元に戻す処理を実装する
+        //[SerializeField] [Header("元の大きさの戻る時のイージング")] [ShowIf(nameof(_doAnimation))]
+        //private Ease _buttonAnimationPullEase = Ease.OutSine;
 
 #if UNITY_EDITOR
         protected override void Reset()
@@ -47,14 +48,18 @@ namespace MittaUI.Runtime
             if (!_doAnimation) return;
 
             var go = _buttonAnimationTransform.gameObject;
+            var motionHandle = new CompositeMotionHandle();
+            motionHandle.Complete();
 
-            // TODO : アニメーション実装
-            // if (isPressed)
-            //     _buttonAnimationTransform.DOScale(_buttonAnimationPressScale, _buttonAnimationPressDuration)
-            //         .SetEase(_buttonAnimationPressEase).SetLink(go);
-            // else
-            //     _buttonAnimationTransform.DOScale(_buttonAnimationDefaultScale, _buttonAnimationPullDuration)
-            //         .SetEase(_buttonAnimationPullEase).SetLink(go);
+            if (isPressed)
+            {
+
+                LMotion.Create(Vector3.one, Vector3.one * _buttonAnimationPressScale, _buttonAnimationPressDuration)
+                    .WithLoops(2, LoopType.Yoyo)
+                    .WithEase(_buttonAnimationPressEase)
+                    .BindToLocalScale(transform)
+                    .AddTo(gameObject);
+            }
         }
     }
 }
